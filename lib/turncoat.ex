@@ -1,18 +1,20 @@
 defmodule Turncoat do
-  @moduledoc """
-  Documentation for Turncoat.
-  """
+  def h(nodeName, attributes \\ %{})
+  def h(nodeName, nil), do: h(nodeName, %{})
 
-  @doc """
-  Hello world.
+  def h(nodeName, attributes) when is_list(attributes) do
+    h(nodeName, Mappable.to_map(attributes, keys: :strings))
+  end
 
-  ## Examples
+  def h(nodeName, attributes) do
+    children = attributes["children"] || []
+    attributes = Map.delete(attributes, "children")
 
-      iex> Turncoat.hello
-      :world
-
-  """
-  def hello do
-    :world
+    %Turncoat.Node{
+      nodeName: nodeName,
+      attributes: attributes,
+      children: children,
+      key: attributes["key"]
+    }
   end
 end
